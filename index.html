@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172235">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CSPos">
+<title>CSPos v2 — Offline POS</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f4f7;color:#1b2330;font-family:Arial,Helvetica,sans-serif}.app{min-height:100vh;display:flex}.sidebar{width:245px;background:#172235;padding:24px 14px;color:#fff}.brand{font-size:30px;font-weight:800;padding:0 12px 28px}.brand span{color:#44b7e8}.nav{width:100%;display:flex;gap:13px;align-items:center;background:transparent;color:#c8d0dc;border:0;border-radius:10px;padding:14px 15px;margin:5px 0;text-align:left;font-size:15px;cursor:pointer}.nav span{font-size:19px}.nav:hover,.nav.active{background:#26364f;color:#fff}main{flex:1;padding:32px;max-width:1400px}.page{display:none}.page.active{display:block}.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:18px}.page-head h1{margin:0 0 6px;font-size:29px}.page-head p{margin:0;color:#687486}.card{background:#fff;border:1px solid #e4e8ee;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(30,40,55,.04)}label{font-weight:700;font-size:13px;display:block;margin-bottom:7px}input,select,button{font:inherit;border-radius:8px}input,select{width:100%;padding:12px;border:1px solid #d7dde5;background:#fff}button{padding:11px 16px;border:1px solid #d7dde5;background:#fff;cursor:pointer;font-weight:700}.primary{background:#2563eb;color:#fff;border-color:#2563eb}.dark{background:#172235;color:#fff;border-color:#172235}.outline{background:#fff;color:#1f2937}.bill-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.scan-card{display:flex;gap:12px;align-items:end}.input-wrap{flex:1}.scan-card button{height:46px;white-space:nowrap}.bill-table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:760px}th,td{text-align:left;padding:14px 10px;border-bottom:1px solid #edf0f4}th{font-size:12px;text-transform:uppercase;color:#6b7280}.totals{display:flex;justify-content:flex-end;gap:45px;padding:18px 8px 0;text-align:right}.totals div{color:#687486}.totals strong{display:block;color:#111827;font-size:20px;margin-top:5px}.actions{display:flex;gap:10px}.large{padding:14px 22px}.search{margin-bottom:16px}.form-row{display:flex;gap:10px}.form-row input{flex:1}.form-row button{white-space:nowrap}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat{background:#fff;border:1px solid #e4e8ee;border-radius:14px;padding:24px}.stat span{color:#687486;font-size:14px}.stat b{display:block;font-size:28px;margin-top:12px}.report-filter{display:flex;align-items:end;gap:12px}.report-filter label{flex:1}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.settings-grid button{align-self:end}.note{line-height:1.6;color:#596579}.scanner{background:#111827;border-radius:14px;padding:15px;margin-bottom:16px;color:#fff}.scanner video{display:block;width:100%;max-height:350px;object-fit:cover}.scanner-actions{display:flex;justify-content:space-between;align-items:center;margin-top:10px}.hidden{display:none!important}.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:15px;z-index:10}.modal-box{background:#fff;border-radius:16px;width:min(430px,100%);padding:24px}.modal-box h2{margin-top:0}.modal-box p{color:#687486}.modal-box input{margin:7px 0}.modal-actions{display:flex;gap:10px;margin-top:12px}.toast{position:fixed;right:18px;bottom:18px;background:#172235;color:#fff;padding:12px 16px;border-radius:9px;display:none;z-index:20}.barcode-preview{display:flex;justify-content:center;align-items:center;min-height:72px;background:#fafafa;border:1px dashed #d7dde5;border-radius:8px;margin-top:12px;padding:8px}.barcode-preview svg{max-width:100%;height:62px}.format-note{font-size:12px;color:#687486;margin-top:6px}.receipt{display:none}
+@media(max-width:800px){.sidebar{width:72px;padding:16px 8px}.brand{font-size:0;text-align:center;padding:0 0 22px}.brand:before{content:"CS";font-size:18px}.nav{justify-content:center;padding:14px 5px}.nav b{display:none}main{padding:18px}.bill-meta,.stats,.settings-grid{grid-template-columns:1fr}.scan-card,.form-row{flex-direction:column;align-items:stretch}.scan-card button{width:100%}.page-head{align-items:center}.totals{justify-content:space-between;gap:10px}.history-card{align-items:flex-start;flex-direction:column}}
+@media print{
+ body{background:#fff}.app,.modal,.toast{display:none!important}.receipt{display:block!important;width:80mm;margin:0;padding:3mm 3mm;color:#000;font-family:"Courier New",monospace;font-size:12px}.receipt *{box-sizing:border-box}.r-center{text-align:center}.r-title{font-size:18px;font-weight:bold}.r-line{border-top:1px dashed #000;margin:8px 0}.r-meta{display:flex;justify-content:space-between;gap:8px}.r-item{page-break-inside:avoid;margin:10px 0 14px}.r-name{font-size:15px;font-weight:bold}.r-row{display:flex;justify-content:space-between}.barcode{display:block;width:100%;height:55px;margin:4px auto}.barcode-label{text-align:center;font-size:11px;letter-spacing:.4px;word-break:break-all}.r-total{font-size:15px;font-weight:bold;text-align:right}.r-footer{text-align:center;margin-top:12px;font-size:11px}@page{size:80mm auto;margin:0}
+}
+</style>
+
+<style id="iphone-mobile-ui">
+html{background:#f2f4f7;-webkit-text-size-adjust:100%;}
+body{padding-bottom:env(safe-area-inset-bottom);}
+button,input,select{min-height:46px;-webkit-tap-highlight-color:transparent;}
+input,select{font-size:16px;}
+button{touch-action:manipulation;}
+@media(max-width:800px){
+ body{background:#f5f7fa;}
+ .app{display:block;min-height:100svh;padding-bottom:78px;}
+ .sidebar{position:fixed;z-index:50;left:0;right:0;bottom:0;width:100%;height:calc(64px + env(safe-area-inset-bottom));padding:6px 6px env(safe-area-inset-bottom);display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:rgba(23,34,53,.97);box-shadow:0 -4px 18px rgba(0,0,0,.16);backdrop-filter:blur(12px);}
+ .brand{display:none;}
+ .nav{height:56px;min-height:56px;margin:0;padding:4px 2px;display:flex;flex-direction:column;justify-content:center;gap:2px;border-radius:10px;text-align:center;font-size:11px;}
+ .nav span{font-size:19px;line-height:20px;}
+ .nav b{display:block;font-size:10px;font-weight:600;white-space:nowrap;}
+ main{width:100%;max-width:none;padding:14px 12px 20px;}
+ .page-head{margin:4px 0 14px;gap:8px;}
+ .page-head h1{font-size:24px;}
+ .page-head p{font-size:12px;line-height:1.4;}
+ .card{padding:14px;border-radius:14px;margin-bottom:12px;}
+ .bill-meta{gap:10px;}
+ .scan-card{gap:9px;}
+ .scan-card button{width:100%;}
+ .actions{display:grid;grid-template-columns:1fr;gap:9px;}
+ .large{width:100%;padding:13px 16px;}
+ .bill-table-wrap{margin-left:-2px;margin-right:-2px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+ table{min-width:650px;}
+ th,td{padding:11px 8px;}
+ .totals{font-size:12px;padding-top:14px;}
+ .totals strong{font-size:18px;}
+ .report-filter{display:grid;grid-template-columns:1fr;}
+ .report-filter button{width:100%;}
+ .stats{gap:10px;}
+ .stat{padding:16px;}
+ .stat b{font-size:24px;margin-top:7px;}
+ .settings-grid{gap:10px;}
+ .form-row{gap:8px;}
+ .modal{padding:10px;}
+ .modal-box{padding:18px;border-radius:18px;}
+ .toast{left:12px;right:12px;bottom:82px;text-align:center;}
+ .scanner{margin-left:-2px;margin-right:-2px;}
+ .scanner video{max-height:48svh;min-height:220px;}
+}
+@media(min-width:801px){#iphone-mobile-ui{display:none}}
+</style>
+<link rel="manifest" href="./manifest.json"></head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<div class="brand">CS<span>Pos</span></div>
+<button class="nav active" data-page="bill"><span>🧾</span><b>New Bill</b></button>
+<button class="nav" data-page="fabrics"><span>🧵</span><b>Fabric Types</b></button>
+<button class="nav" data-page="reports"><span>📊</span><b>Daily Report</b></button>
+<button class="nav" data-page="history"><span>📜</span><b>Bill History</b></button>
+<button class="nav" data-page="settings"><span>⚙️</span><b>Settings</b></button>
+</aside>
+<main>
+<section id="bill" class="page active">
+<div class="page-head"><div><h1>New Bill</h1><p>රෙදි code එක හෝ barcode data එක type / scanner මගින් ඇතුළත් කරන්න</p></div><button class="outline" id="newBillBtn">+ New Bill</button></div>
+<div class="bill-meta card">
+<div><label>Bill No</label><input id="billNo" readonly></div>
+<div><label>Sales No</label><input id="salesNo"></div>
+<div><label>Date</label><input id="billDate" type="date"></div>
+</div>
+<div class="scan-card card">
+<div class="input-wrap"><label>Code / Barcode Data</label><input id="codeInput" autocomplete="off" placeholder="උදා: 2.5*758000001"></div>
+<button class="primary" id="addCodeBtn">Add to Bill</button>
+<button class="outline" id="scanBtn">📷 Camera Scan</button>
+</div>
+<div id="scanner" class="scanner hidden">
+<video id="video" autoplay playsinline></video>
+<div class="scanner-actions"><span>Camera scanning browser support මත රඳා පවතී.</span><button id="stopScanBtn">Stop</button></div>
+</div>
+<div class="card bill-table-wrap">
+<table><thead><tr><th>Fabric</th><th>Code</th><th>Qty</th><th>Rate</th><th>Discount %</th><th>Net Amount</th><th></th></tr></thead><tbody id="billItems"></tbody></table>
+<div class="totals"><div>Total Fabric Quantity<strong id="totalQty">0</strong></div><div>Gross<strong>Rs. <span id="totalGross">0.00</span></strong></div><div>Discount<strong>Rs. <span id="totalDiscount">0.00</span></strong></div><div>Net Total<strong>Rs. <span id="totalValue">0.00</span></strong></div></div>
+</div>
+<div class="actions"><button class="primary large" id="saveBillBtn">💾 Save Bill</button><button class="dark large" id="printBillBtn">🖨️ Print POS-80C Bill</button></div>
+<div class="card"><b>Barcode rule:</b> Bill barcode data = <code>Quantity*ItemCode</code> — example <code>2.5*758000001</code>. The printed barcode is Code 128 and is generated locally inside this file.</div>
+</section>
+
+<section id="fabrics" class="page">
+<div class="page-head"><div><h1>Fabric Types</h1><p>රෙදි වර්ග, code සහ rate කළමනාකරණය</p></div><button class="primary" id="showFabricForm">+ New Fabric</button></div>
+<input class="search" id="fabricSearch" placeholder="🔍 Search fabric name or code">
+<div id="fabricForm" class="card form-row hidden">
+<input id="fabricName" placeholder="Fabric Name"><input id="fabricCode" placeholder="Fabric Code"><input id="fabricPrice" type="number" step="0.01" min="0" placeholder="Rate per unit">
+<button class="primary" id="saveFabricBtn">Save</button><button id="cancelFabricBtn">Cancel</button>
+</div>
+<div class="card bill-table-wrap"><table><thead><tr><th>Fabric Name</th><th>Code</th><th>Rate</th><th>Barcode Format</th><th></th></tr></thead><tbody id="fabricList"></tbody></table></div>
+</section>
+
+<section id="reports" class="page">
+<div class="page-head"><div><h1>Daily Report</h1><p>දින අනුව sales summary</p></div><button class="dark" id="printReportBtn">🖨️ Print Daily Report</button></div>
+<div class="card report-filter"><label>Date <input id="reportDate" type="date"></label><button class="primary" id="loadReportBtn">Load Report</button></div>
+<div class="stats"><div class="stat"><span>Total Fabric Quantity</span><b id="reportQty">0</b></div><div class="stat"><span>Total Bills</span><b id="reportBills">0</b></div><div class="stat"><span>Gross Sales</span><b>Rs. <span id="reportGross">0.00</span></b></div><div class="stat"><span>Total Discount</span><b>Rs. <span id="reportDiscount">0.00</span></b></div><div class="stat"><span>Net Sales</span><b>Rs. <span id="reportValue">0.00</span></b></div></div>
+<div class="card bill-table-wrap"><table><thead><tr><th>Bill</th><th>Time</th><th>Qty</th><th>Gross</th><th>Discount</th><th>Net</th></tr></thead><tbody id="reportList"></tbody></table></div>
+</section>
+
+<section id="history" class="page"><div class="page-head"><div><h1>Bill History</h1><p>Save කළ bills නැවත බලන්න සහ print කරන්න</p></div></div><div id="historyList"></div></section>
+
+<section id="settings" class="page">
+<div class="page-head"><div><h1>Settings</h1><p>Bill සහ POS printer settings</p></div></div>
+<div class="card settings-grid">
+<div><label>Next Bill Number</label><input id="setBillNo"></div><div><label>Default Sales Number</label><input id="setSalesNo"></div>
+<div><label>Printer</label><select id="printerType"><option value="POS-80C / Browser Print">POS-80C / Browser Print</option><option>Bluetooth</option><option>Wi-Fi / Network</option><option>USB</option><option>COM Port</option></select></div>
+<div><label>Shop Name</label><input id="shopName" placeholder="Your Shop Name"></div>
+<button class="primary" id="saveSettingsBtn">Save Settings</button>
+</div>
+<div class="card note"><b>POS-80C / XP-80C:</b> printer driver එක install කර browser print dialog එකෙන් 80mm printer එක තෝරන්න. Browser එකෙන් raw ESC/POS data direct USB/Bluetooth වෙත යැවීම standard HTML වලින් guaranteed නොවන නිසා මෙම version එක driver/browser print භාවිතා කරයි.</div>
+</section>
+</main>
+</div>
+
+<div id="modal" class="modal hidden"><div class="modal-box"><h2>New Fabric Code Detected</h2><p>මෙම code එක Fabric List එකේ නැහැ. මෙම bill එකේදී rate සහ fabric name දී save කරන්න.</p>
+<input id="newCodeName" placeholder="Fabric Name"><input id="newCodeValue" readonly><input id="newCodePrice" type="number" step="0.01" placeholder="Rate per unit"><input id="newCodeQty" type="number" step="0.01" placeholder="Quantity">
+<div class="modal-actions"><button class="primary" id="saveNewCodeBtn">Save & Add</button><button id="closeModalBtn">Cancel</button></div></div></div>
+<div id="toast" class="toast"></div>
+<div id="printReceipt" class="receipt"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.5/umd/index.min.js"></script>
+<script>
+"use strict";
+
+/* ============================================================
+   CSPos v2 — Embedded, offline Code 128B barcode renderer
+   No CDN, no external library, no API.
+   ============================================================ */
+const CODE128_PATTERNS = ['212222', '222122', '222221', '121223', '121322', '131222', '122213', '122312', '132212', '221213', '221312', '231212', '112232', '122132', '122231', '113222', '123122', '123221', '223211', '221132', '221231', '213212', '223112', '312131', '311222', '321122', '321221', '312212', '322112', '322211', '212123', '212321', '232121', '111323', '131123', '131321', '112313', '132113', '132311', '211313', '231113', '231311', '112133', '112331', '132131', '113123', '113321', '133121', '313121', '211331', '231131', '213113', '213311', '213131', '311123', '311321', '331121', '312113', '312311', '332111', '314111', '221411', '431111', '111224', '111422', '121124', '121421', '141122', '141221', '112214', '112412', '122114', '122411', '142112', '142211', '241211', '221114', '413111', '241112', '134111', '111242', '121142', '121241', '114212', '124112', '124211', '411212', '421112', '421211', '212141', '214121', '412121', '111143', '111341', '131141', '114113', '114311', '411113', '411311', '113141', '114131', '311141', '411131', '211412', '211214', '211232', '2331112'];
+const $=id=>document.getElementById(id);
+const get=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch(e){return f}};
+const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const today=()=>new Date().toISOString().slice(0,10);
+const money=n=>Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+let items=[],editingId=null,scanStream=null,zxingReader=null,zxingControls=null;
+
+function toast(msg){
+ const t=$("toast");t.textContent=msg;t.style.display="block";
+ clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.style.display="none",2200);
+}
+function settings(){return get("csposSettingsV2",{nextBill:1,salesNo:"001",printer:"POS-80C / Browser Print",shop:"CSPos"})}
+function fabrics(){return get("csposFabricsV2",[])}
+function bills(){return get("csposBillsV2",[])}
+
+/* Code 128B: ASCII 32..126. Returns a standards-compatible SVG. */
+function code128BValue(ch){const n=ch.charCodeAt(0);return n>=32&&n<=126?n-32:null}
+function code128BEncode(text){
+ text=String(text);
+ if(!text)return null;
+ const values=[];
+ for(const ch of text){
+   const v=code128BValue(ch);
+   if(v===null) return null;
+   values.push(v);
+ }
+ const checksum=(104+values.reduce((sum,v,i)=>sum+v*(i+1),0))%103;
+ return [104,...values,checksum,106];
+}
+function barcodeSVG(text, opts={}){
+ const seq=code128BEncode(text);
+ if(!seq) return "";
+ const narrow=Number(opts.width||2);
+ const height=Number(opts.height||60);
+ const quiet=Number(opts.quiet||12);
+ let modules=quiet*2;
+ for(const code of seq) modules+=CODE128_PATTERNS[code].split("").reduce((a,n)=>a+Number(n),0);
+ const w=modules*narrow;
+ let x=quiet*narrow;
+ let bars="";
+ for(const code of seq){
+   const p=CODE128_PATTERNS[code];
+   let black=true;
+   for(const n of p){
+     const ww=Number(n)*narrow;
+     if(black) bars+=`<rect x="${x}" y="0" width="${ww}" height="${height}"/>`;
+     x+=ww;black=!black;
+   }
+ }
+ return `<svg class="barcode" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${height}" width="${w}" height="${height}" role="img" aria-label="${esc(text)}">${bars}</svg>`;
+}
+function barcodeIsValid(text){return !!code128BEncode(text)}
+
+function init(){
+ const s=settings();
+ $("billNo").value=String(s.nextBill).padStart(6,"0");
+ $("salesNo").value=s.salesNo;$("billDate").value=today();$("reportDate").value=today();
+ $("setBillNo").value=s.nextBill;$("setSalesNo").value=s.salesNo;$("printerType").value=s.printer;$("shopName").value=s.shop;
+ renderFabrics();renderBill();renderHistory();loadReport();
+}
+document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active");$(b.dataset.page).classList.add("active");
+ if(b.dataset.page==="reports")loadReport();
+ if(b.dataset.page==="history")renderHistory();
+});
+
+function parseInput(v){
+ v=String(v||"").trim();if(!v)return;
+ let qty=1,code=v;
+ if(v.includes("*")){
+   const p=v.split("*");
+   qty=parseFloat(p.shift());
+   code=p.join("*").trim();
+ }
+ if(!code||!Number.isFinite(qty)||qty<=0)return alert("උදාහරණය: 2.5*758000001");
+ if(!barcodeIsValid(qty+"*"+code))return alert("Barcode data එක Code 128B සඳහා valid ASCII text එකක් විය යුතුයි.");
+ const f=fabrics().find(x=>x.code===code);
+ if(f)addItem(f,qty);
+ else{
+   $("newCodeValue").value=code;$("newCodeQty").value=qty;$("newCodeName").value="";$("newCodePrice").value="";
+   $("modal").classList.remove("hidden");setTimeout(()=>$("newCodeName").focus(),50);
+ }
+ $("codeInput").value="";
+}
+$("addCodeBtn").onclick=()=>parseInput($("codeInput").value);
+$("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")parseInput(e.target.value)});
+
+function addItem(f,qty){
+ const old=items.find(x=>x.code===f.code);
+ if(old)old.qty=Number((old.qty+qty).toFixed(3));
+ else items.push({name:f.name,code:f.code,price:Number(f.price||0),qty:Number(qty),discount:0});
+ renderBill();
+}
+function itemGross(x){return Number(x.qty||0)*Number(x.price||0)}
+function itemDiscount(x){return itemGross(x)*Math.min(100,Math.max(0,Number(x.discount||0)))/100}
+function itemNet(x){return itemGross(x)-itemDiscount(x)}
+function renderBill(){
+ $("billItems").innerHTML=items.map((x,i)=>`<tr>
+ <td><b>${esc(x.name)}</b></td><td>${esc(x.code)}</td>
+ <td><input type="number" step="0.01" min="0.01" value="${x.qty}" onchange="changeQty(${i},this.value)" style="width:85px"></td>
+ <td>Rs. ${money(x.price)}</td>
+ <td><input type="number" step="0.01" min="0" max="100" value="${Number(x.discount||0)}" onchange="changeDiscount(${i},this.value)" style="width:85px"><small>%</small></td>
+ <td><b>Rs. ${money(itemNet(x))}</b></td>
+ <td><button class="delete" onclick="removeItem(${i})">Remove</button></td></tr>`).join("");
+ const gross=items.reduce((a,x)=>a+itemGross(x),0),disc=items.reduce((a,x)=>a+itemDiscount(x),0),net=gross-disc;
+ $("totalQty").textContent=money(items.reduce((a,x)=>a+Number(x.qty),0));
+ $("totalGross").textContent=money(gross);$("totalDiscount").textContent=money(disc);$("totalValue").textContent=money(net);
+}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+window.changeQty=(i,v)=>{const q=parseFloat(v);if(q>0)items[i].qty=q;renderBill()};
+window.changeDiscount=(i,v)=>{let d=parseFloat(v);if(!Number.isFinite(d))d=0;items[i].discount=Math.min(100,Math.max(0,d));renderBill()};
+window.removeItem=i=>{items.splice(i,1);renderBill()};
+
+$("saveNewCodeBtn").onclick=()=>{
+ const name=$("newCodeName").value.trim(),code=$("newCodeValue").value,price=parseFloat($("newCodePrice").value)||0,qty=parseFloat($("newCodeQty").value);
+ if(!name)return alert("Fabric Name ඇතුළත් කරන්න");
+ if(!Number.isFinite(qty)||qty<=0)return alert("Quantity වැරදියි");
+ let fs=fabrics();if(fs.some(x=>x.code===code))return alert("Code එක දැනටමත් ඇත");
+ const f={id:Date.now(),name,code,price};fs.push(f);set("csposFabricsV2",fs);addItem(f,qty);
+ $("modal").classList.add("hidden");renderFabrics();toast("New fabric saved");
+};
+$("closeModalBtn").onclick=()=>$("modal").classList.add("hidden");
+
+$("showFabricForm").onclick=()=>{editingId=null;$("fabricName").value="";$("fabricCode").value="";$("fabricPrice").value="";$("fabricForm").classList.remove("hidden");};
+$("cancelFabricBtn").onclick=()=>$("fabricForm").classList.add("hidden");
+$("saveFabricBtn").onclick=()=>{
+ const name=$("fabricName").value.trim(),code=$("fabricCode").value.trim(),price=parseFloat($("fabricPrice").value)||0;
+ if(!name||!code)return alert("Fabric Name සහ Code අවශ්‍යයි");
+ if(!barcodeIsValid("1*"+code))return alert("Code එකේ characters Code 128B සඳහා valid ASCII විය යුතුයි.");
+ let fs=fabrics();if(fs.some(x=>x.code===code&&x.id!==editingId))return alert("මෙම code එක දැනටමත් ඇත");
+ if(editingId)fs=fs.map(x=>x.id===editingId?{...x,name,code,price}:x);else fs.push({id:Date.now(),name,code,price});
+ set("csposFabricsV2",fs);$("fabricForm").classList.add("hidden");renderFabrics();toast("Fabric saved");
+};
+function renderFabrics(){
+ const q=($("fabricSearch").value||"").toLowerCase();
+ $("fabricList").innerHTML=fabrics().filter(x=>String(x.name).toLowerCase().includes(q)||String(x.code).includes(q)).map(x=>`<tr>
+ <td><b>${esc(x.name)}</b></td><td>${esc(x.code)}</td><td>Rs. ${money(x.price)}</td>
+ <td><code>Quantity*${esc(x.code)}</code><div class="format-note">CODE 128B</div></td>
+ <td><button onclick="editFabric(${x.id})">Edit</button> <button class="delete" onclick="deleteFabric(${x.id})">Delete</button></td></tr>`).join("");
+}
+$("fabricSearch").oninput=renderFabrics;
+window.editFabric=id=>{const x=fabrics().find(x=>x.id===id);editingId=id;$("fabricName").value=x.name;$("fabricCode").value=x.code;$("fabricPrice").value=x.price||0;$("fabricForm").classList.remove("hidden")};
+window.deleteFabric=id=>{if(confirm("මෙම Fabric එක delete කරන්නද?")){set("csposFabricsV2",fabrics().filter(x=>x.id!==id));renderFabrics();toast("Fabric deleted")}};
+
+function makeBill(){
+ if(!items.length)return null;
+ const gross=items.reduce((a,x)=>a+itemGross(x),0),discount=items.reduce((a,x)=>a+itemDiscount(x),0);
+ return {id:Date.now(),billNo:$("billNo").value,salesNo:$("salesNo").value,date:$("billDate").value,time:new Date().toLocaleTimeString(),items:JSON.parse(JSON.stringify(items)),totalQty:items.reduce((a,x)=>a+x.qty,0),grossValue:gross,totalDiscount:discount,totalValue:gross-discount};
+}
+$("saveBillBtn").onclick=()=>{
+ const b=makeBill();if(!b)return alert("Bill එකට items නැහැ");
+ const all=bills();all.push(b);set("csposBillsV2",all);
+ const s=settings();s.nextBill++;s.salesNo=$("salesNo").value;set("csposSettingsV2",s);
+ alert("Bill Saved Successfully");newBill();renderHistory();
+};
+function newBill(){items=[];const s=settings();$("billNo").value=String(s.nextBill).padStart(6,"0");$("salesNo").value=s.salesNo;$("billDate").value=today();renderBill()}
+$("newBillBtn").onclick=newBill;
+
+function renderReceipt(b){
+ const s=settings(),r=$("printReceipt");
+ r.innerHTML=`<div class="r-center r-title">${esc(s.shop||"CSPos")}</div>
+ <div class="r-center">FABRIC BARCODE RECEIPT</div><div class="r-line"></div>
+ <div>RECEIPT : ${esc(b.billNo)}</div><div>SALES   : ${esc(b.salesNo)}</div>
+ <div class="r-meta"><span>DATE: ${esc(b.date)}</span><span>${esc(b.time||"")}</span></div><div class="r-line"></div>`+
+ b.items.map(x=>{
+   const data=x.qty+"*"+x.code;
+   return `<div class="r-item"><div class="r-name">${esc(x.name)}</div>
+   <div class="r-row"><span>QTY: ${esc(x.qty)} @ ${money(x.price)}</span><span>Rs. ${money(itemGross(x))}</span></div>
+   ${Number(x.discount||0)>0?`<div class="r-row"><span>DISCOUNT ${money(x.discount)}%</span><span>- Rs. ${money(itemDiscount(x))}</span></div>`:""}
+   <div class="r-row"><b>NET</b><b>Rs. ${money(itemNet(x))}</b></div>
+   ${barcodeSVG(data,{width:1.8,height:58,quiet:12})}
+   <div class="barcode-label">${esc(data)}</div></div>`;
+ }).join("")+
+ `<div class="r-line"></div><div class="r-total">TOTAL QTY: ${money(b.totalQty)}</div>
+ <div class="r-total">TOTAL: Rs. ${money(b.totalValue)}</div><div class="r-line"></div>
+ <div class="r-footer">Thank You<br>${esc(s.shop||"CSPos")}</div>`;
+}
+$("printBillBtn").onclick=()=>{
+ const b=makeBill();if(!b)return alert("Bill එකට items නැහැ");
+ renderReceipt(b);setTimeout(()=>window.print(),150);
+};
+
+$("loadReportBtn").onclick=loadReport;
+function loadReport(){
+ const d=$("reportDate").value,bs=bills().filter(x=>x.date===d);
+ const qty=bs.reduce((a,x)=>a+Number(x.totalQty||0),0);
+ const gross=bs.reduce((a,x)=>a+Number(x.grossValue??x.totalValue??0),0);
+ const discount=bs.reduce((a,x)=>a+Number(x.totalDiscount||0),0);
+ const net=bs.reduce((a,x)=>a+Number(x.totalValue||0),0);
+ $("reportQty").textContent=money(qty);$("reportBills").textContent=bs.length;
+ $("reportGross").textContent=money(gross);$("reportDiscount").textContent=money(discount);$("reportValue").textContent=money(net);
+ $("reportList").innerHTML=bs.length?bs.map(b=>`<tr><td>${esc(b.billNo)}</td><td>${esc(b.time||"")}</td><td>${money(b.totalQty||0)}</td><td>Rs. ${money(b.grossValue??b.totalValue??0)}</td><td>Rs. ${money(b.totalDiscount||0)}</td><td><b>Rs. ${money(b.totalValue||0)}</b></td></tr>`).join(""):"<tr><td colspan=6>No sales for this date.</td></tr>";
+}
+function renderDailyReportPrint(){
+ const d=$("reportDate").value,bs=bills().filter(x=>x.date===d);
+ const s=settings(),gross=bs.reduce((a,x)=>a+Number(x.grossValue??x.totalValue??0),0),discount=bs.reduce((a,x)=>a+Number(x.totalDiscount||0),0),net=bs.reduce((a,x)=>a+Number(x.totalValue||0),0),qty=bs.reduce((a,x)=>a+Number(x.totalQty||0),0);
+ $("printReceipt").innerHTML=`<div class="r-center r-title">${esc(s.shop||"CSPos")}</div><div class="r-center">DAILY SALES REPORT</div><div class="r-line"></div><div>DATE: ${esc(d)}</div><div>BILLS: ${bs.length}</div><div>TOTAL QTY: ${money(qty)}</div><div class="r-line"></div>`+bs.map(b=>`<div class="r-row"><span>#${esc(b.billNo)}</span><span>Rs. ${money(b.totalValue||0)}</span></div>`).join("")+`<div class="r-line"></div><div class="r-total">GROSS: Rs. ${money(gross)}</div><div class="r-total">DISCOUNT: - Rs. ${money(discount)}</div><div class="r-total">NET SALES: Rs. ${money(net)}</div><div class="r-line"></div><div class="r-footer">CSPos Daily Report</div>`;
+}
+$("printReportBtn").onclick=()=>{loadReport();renderDailyReportPrint();setTimeout(()=>window.print(),150)};
+function renderHistory(){
+ const bs=[...bills()].reverse();
+ $("historyList").innerHTML=bs.length?bs.map(b=>`<div class="card history-card" style="display:flex;justify-content:space-between;align-items:center;gap:15px">
+ <div><b>Bill #${esc(b.billNo)}</b><br><small>${esc(b.date)} • Sales ${esc(b.salesNo)} • Qty ${money(b.totalQty)} • Gross Rs. ${money(b.grossValue??b.totalValue)} • Discount Rs. ${money(b.totalDiscount||0)} • Net Rs. ${money(b.totalValue)}</small></div>
+ <button class="dark" onclick="printSavedBill(${b.id})">🖨️ Print</button></div>`).join(""):"<div class=\"card\">No bills saved.</div>";
+}
+window.printSavedBill=id=>{const b=bills().find(x=>x.id===id);if(b){renderReceipt(b);setTimeout(()=>window.print(),150)}};
+
+$("saveSettingsBtn").onclick=()=>{
+ const s={nextBill:parseInt($("setBillNo").value)||1,salesNo:$("setSalesNo").value||"001",printer:$("printerType").value,shop:$("shopName").value||"CSPos"};
+ set("csposSettingsV2",s);alert("Settings Saved");newBill();
+};
+
+/* iPhone/Safari-friendly camera barcode scanner using ZXing Browser.
+   Supports Code 128, EAN-13, EAN-8 and other common 1D formats. */
+let scanBusy=false;
+$("scanBtn").onclick=async()=>{
+ if(!navigator.mediaDevices?.getUserMedia)return alert("මෙම browser එක camera access support නොකරයි.");
+ try{
+  if(!window.ZXingBrowser) throw new Error("ZXing library not loaded");
+  const video=$("video");
+  $("scanner").classList.remove("hidden");
+  video.setAttribute("playsinline","");
+  video.muted=true;
+  scanBusy=true;
+  zxingReader=new ZXingBrowser.BrowserMultiFormatReader();
+  zxingControls=await zxingReader.decodeFromConstraints(
+   {video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}}},
+   video,
+   (result,err)=>{
+    if(!scanBusy||!result)return;
+    const value=result.getText();
+    if(value){scanBusy=false;parseInput(value);stopScan();}
+   }
+  );
+ }catch(e){
+  console.error("Camera scanner error",e);
+  stopScan();
+  alert("Camera scanner start කරන්න බැරි වුණා. Camera permission එක Allow කරලා නැවත උත්සාහ කරන්න.");
+ }
+};
+function stopScan(){
+ scanBusy=false;
+ try{if(zxingControls?.stop)zxingControls.stop();}catch(e){}
+ zxingControls=null;
+ try{if(zxingReader?.reset)zxingReader.reset();}catch(e){}
+ zxingReader=null;
+ if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;}
+ const video=$("video");
+ if(video){try{video.pause();}catch(e){};video.srcObject=null;}
+ $("scanner").classList.add("hidden");
+}
+$("stopScanBtn").onclick=stopScan;
+
+init();
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script></body>
+</html>
